@@ -1,3 +1,7 @@
 from django.test import TestCase
 
-# Create your tests here.
+
+class TimeTableTestCase(TestCase):
+    def test_try_test(self):
+        value = 5
+        self.assertEqual(value, 5)

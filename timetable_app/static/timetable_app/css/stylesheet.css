@@ -1,0 +1,18 @@
+.home-container {
+    background: url("../img/timetable.jpg")
+}
+
+.wrapper {
+    text-align: center;
+}
+
+.button {
+    position: absolute;
+    background-color: silver;
+    padding: 10px;
+    top: 50%;
+}
+
+.button:hover {
+    background-color: gray;
+}
