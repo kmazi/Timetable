@@ -69,7 +69,7 @@ class Course(models.Model):
               (600, 600))
     level = models.PositiveSmallIntegerField(help_text="Enter a level for the course",
                                              choices=LEVELS)
-    lecturer_id = models.PositiveSmallIntegerField()
+    lecturer = models.ForeignKey(User, null=True)
 
     def __str__(self):
         return self.title
