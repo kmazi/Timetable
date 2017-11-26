@@ -65,8 +65,8 @@ class Course(models.Model):
     title = models.CharField(max_length=100, unique=True)
     department = models.ForeignKey(Department, on_delete=models.CASCADE)
     unit = models.PositiveSmallIntegerField()
-    LEVELS = (("100", 100), ("200", 200), ("300", 300), ("400", 400), ("500", 500),
-              ("600", 600))
+    LEVELS = ((100, 100), (200, 200), (300, 300), (400, 400), (500, 500),
+              (600, 600))
     level = models.PositiveSmallIntegerField(help_text="Enter a level for the course",
                                              choices=LEVELS)
     lecturer_id = models.PositiveSmallIntegerField()
@@ -93,13 +93,14 @@ class TimeSlot(models.Model):
         db_table = "TimeSlot"
     classroom = models.ForeignKey(ClassRoom, on_delete=models.CASCADE)
     course = models.ForeignKey(Course, on_delete=models.CASCADE)
+    lecturer = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
     start_time = models.TimeField()
     default_duration = timedelta(hours=1)
-    duration = models.DurationField(default=default_duration)
+    duration = models.DurationField(default=default_duration, )
     day = models.ForeignKey(Day, on_delete=models.CASCADE, null=True)
 
     def __str__(self):
-        return "%s - %s" % self.start_time, self.end_time
+        return "{0} by {1}".format(self.course.title, self.start_time)
 
 
 class FreeTime(models.Model):
