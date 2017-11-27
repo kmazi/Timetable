@@ -11,10 +11,8 @@ class Timetable(object):
 
     def get_time_slots(self, lecture_times):
         time_slots = dict()
-        mon_lectures = list()
-        tue_lectures = list()
-        wed_lectures = list()
-        thu_lectures = list()
+        mon_lectures, tue_lectures = list(), list()
+        wed_lectures, thu_lectures = list(), list()
         fri_lectures = list()
         for lecture_time in lecture_times:
             if lecture_time.day.name == "monday":
@@ -37,7 +35,7 @@ class Timetable(object):
     def generate_timetable(self):
         timetable = dict()
         if self.type["timetable_for"] == "lecturer":
-            time_slots = TimeSlot.objects.filter(lecturer=self.type["lecturer"])
+            time_slots = TimeSlot.objects.filter(course__lecturer=self.type["lecturer"])
         if self.type["timetable_for"] == "set":
             time_slots = TimeSlot.objects.filter(course__level=self.type["level"],
                                                  course__department__name=self.type["department_name"])

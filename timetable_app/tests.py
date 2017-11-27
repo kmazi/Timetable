@@ -17,37 +17,35 @@ class TimeTableTestCase(TestCase):
         self.department = Department.objects.create(name="systems engineering")
         self.civil_department = Department.objects.create(name="civil engineering")
         self.classroom = ClassRoom.objects.create(name="class 5",
-                                             department=self.department,
-                                             capacity=100,
-                                             type="departmental class")
-        self.civil_classroom = ClassRoom.objects.create(name="class 2",
-                                                  department=self.civil_department,
+                                                  department=self.department,
                                                   capacity=100,
                                                   type="departmental class")
+        self.civil_classroom = ClassRoom.objects.create(name="class 2",
+                                                        department=self.civil_department,
+                                                        capacity=100,
+                                                        type="departmental class")
         self.course = Course.objects.create(code="GEG301",
-                                       title="Engineering maths",
-                                       department=self.department,
-                                       unit=2,
-                                       level=300,
-                                       lecturer_id=self.lecturer.id)
-        self.eng_drawing = Course.objects.create(code="GEG201",
-                                            title="Engineering drawing",
-                                            department=self.civil_department,
+                                            title="Engineering maths",
+                                            department=self.department,
                                             unit=2,
-                                            level=200,
-                                            lecturer_id=self.another_lecturer.id)
+                                            level=300,
+                                            lecturer=self.lecturer,)
+        self.eng_drawing = Course.objects.create(code="GEG201",
+                                                 title="Engineering drawing",
+                                                 department=self.civil_department,
+                                                 unit=2,
+                                                 level=200,
+                                                 lecturer=self.another_lecturer)
         self.time_slot = TimeSlot(duration=timedelta(hours=1),
-                             day=day,
-                             start_time=time(11, 0),
-                             lecturer=self.lecturer,
-                             course=self.course,
-                             classroom=self.classroom)
+                                  day=day,
+                                  start_time=time(11, 0),
+                                  course=self.course,
+                                  classroom=self.classroom)
         self.another_time_slot = TimeSlot(duration=timedelta(hours=1),
-                                     day=day,
-                                     start_time=time(10, 0),
-                                     lecturer=self.another_lecturer,
-                                     course=self.eng_drawing,
-                                     classroom=self.classroom)
+                                          day=day,
+                                          start_time=time(10, 0),
+                                          course=self.eng_drawing,
+                                          classroom=self.classroom)
         self.another_time_slot.save()
         self.time_slot.save()
 
@@ -61,7 +59,6 @@ class TimeTableTestCase(TestCase):
         TimeSlot.objects.create(duration=timedelta(hours=2),
                                 day=Day.objects.create(name="tuesday"),
                                 start_time=time(10, 0),
-                                lecturer=self.another_lecturer,
                                 course=self.eng_drawing,
                                 classroom=self.classroom)
         timetable = Timetable({"timetable_for": "set",

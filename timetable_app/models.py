@@ -26,7 +26,7 @@ class UserProfile(models.Model):
     department = models.ForeignKey(Department,
                                    on_delete=models.CASCADE)
     break_time_start = models.TimeField(null=True, blank=True)
-    break_time_duration = models.DurationField(null=True, blank=True)
+    break_time_duration = models.DurationField(default=timedelta(hours=1))
 
     def __str__(self):
         """
@@ -49,7 +49,7 @@ class ClassRoom(models.Model):
                             choices=CLASS_TYPES)
 
     def __str__(self):
-        return self.name
+        return "{0} in {1}".format(self.name, self.department)
 
     def get_absolute_url(self):
         """
@@ -72,7 +72,7 @@ class Course(models.Model):
     lecturer = models.ForeignKey(User, null=True)
 
     def __str__(self):
-        return self.title
+        return "{0}: {1}".format(self.code, self.title)
 
 
 class Day(models.Model):
@@ -100,7 +100,7 @@ class TimeSlot(models.Model):
     day = models.ForeignKey(Day, on_delete=models.CASCADE, null=True)
 
     def __str__(self):
-        return "{0} by {1}".format(self.course.title, self.start_time)
+        return "{0} at {1} by {2}".format(self.course.title, self.classroom.name, self.start_time)
 
 
 class FreeTime(models.Model):
