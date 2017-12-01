@@ -4,7 +4,7 @@ from .models import TimeSlot
 
 class Timetable(object):
     """
-    Generates the timetable for lecturers, levels and faculty
+    Generates the timetable for lecturers, levels and department
     """
     def __init__(self, timetable_type):
         self.type = timetable_type

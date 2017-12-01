@@ -93,7 +93,6 @@ class TimeSlot(models.Model):
         db_table = "TimeSlot"
     classroom = models.ForeignKey(ClassRoom, on_delete=models.CASCADE)
     course = models.ForeignKey(Course, on_delete=models.CASCADE)
-    lecturer = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
     start_time = models.TimeField()
     default_duration = timedelta(hours=1)
     duration = models.DurationField(default=default_duration, )
