@@ -41,7 +41,6 @@ class Lecture(object):
         free_time.save()
 
     def fix_lecture(self):
-        import pdb;pdb.set_trace()
         lecture_fixes = list()
         lecture_fix = dict()
         course_unit = self.course.unit
