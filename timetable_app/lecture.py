@@ -1,5 +1,5 @@
 
-from .models import TimeSlot, ClassRoom, Day
+from .models import TimeSlot, FreeTime, ClassRoom, Day
 from random import randint
 from datetime import timedelta, time
 
@@ -24,44 +24,43 @@ class Lecture(object):
         return common_available_time
 
     def get_available_classroom(self, free_start_time, day):
-        free_classrooms = ClassRoom.objects.exclude(timeslot__day=day,
-                                    timeslot__course__department=self.course.department)
-        start_time_query = ClassRoom.objects.exclude(timeslot__start_time=free_start_time,
+        department_classrooms = ClassRoom.objects.filter(department=self.course.department)
+        start_time_query = department_classrooms.exclude(timeslot__start_time=time(free_start_time),
                                                     timeslot__course__department=self.course.department,
                                                     timeslot__day=day)
-        free_classroom_at_time = start_time_query.exclude(timeslot__start_time=free_start_time-1,
-                                        timeslot__duration=2)
-        classroom_double = start_time_query.exclude(timeslot__start_time=free_start_time+1)
+        free_classroom_at_time = start_time_query.exclude(timeslot__start_time=time(free_start_time-1),
+                                        timeslot__duration=timedelta(hours=2))
+        classroom_double = list(start_time_query.exclude(timeslot__start_time=time(free_start_time+1)))
         classroom_single = [classroom for classroom in free_classroom_at_time \
-        if not in classroom_double]
-        classroom_double = free_classrooms + classroom_double
+        if classroom not in classroom_double]
         return [classroom_single, classroom_double]
 
     def fix_free_time(self, start_time, duration, free_time):
-        affected_start_times = [x for x in range(start_time.hour, start_time.hour + duration//3600)]
+        affected_start_times = [x for x in range(start_time.hour, start_time.hour + duration.seconds//3600)]
         free_time.available = [val for val in free_time.available if val not in affected_start_times]
         free_time.save()
 
     def fix_lecture(self):
+        import pdb;pdb.set_trace()
         lecture_fixes = list()
         lecture_fix = dict()
         course_unit = self.course.unit
-        days = Day.objects.all()
+        days = list(Day.objects.all())
         while course_unit > 0:
-            if len(days):
+            if not len(days):
                 break
             lecture_fix["day"] = days[randint(0,len(days)-1)]
             try:
                 free_time = FreeTime.objects.get(lecturer=self.course.lecturer,
                                                 day=lecture_fix["day"])
-            expect:
+            except:
                 free_time = FreeTime(available=[8,9,10,11,12,13,14,15,16,17],
                                     day=lecture_fix["day"],
                                     lecturer=self.course.lecturer)
             common_available_time = self.get_common_free_time(free_time.available, lecture_fix["day"])
             lecture_fixed = False
-            while lecture_fixed not True:
-                if len(common_available_time):
+            while lecture_fixed is not True:
+                if not len(common_available_time):
                     break
                 free_start_time = common_available_time[randint(0, len(common_available_time)-1)]
                 lecture_fix["start_time"] = time(free_start_time)
@@ -90,14 +89,12 @@ class Lecture(object):
                         course_unit -= 2
                         lecture_fixes.append(lecture_fix)
                         lecture_fixed = True
-                        continue
                     elif single_classroom:
                         lecture_fix["classroom"] = single_classroom[randint(0, len(single_classroom)-1)]
                         lecture_fix["duration"] = timedelta(hours=1)
                         course_unit -= 1
                         lecture_fixes.append(lecture_fix)
                         lecture_fixed = True
-                        continue
                     else:
                         common_available_time.remove(free_start_time)
                         continue
@@ -109,11 +106,10 @@ class Lecture(object):
                 TimeSlot.objects.create(day=lecture_fix["day"],
                                         duration=duration,
                                         start_time=start_time,
-                                        lecturer=self.course.lecturer,
                                         course=self.course,
                                         classroom=lecture_fix["classroom"])
                 
-                self.fix_free_time(start_time, duration.seconds, free_time)
+                self.fix_free_time(start_time, duration, free_time)
             return {"status": "success",
                     "message": "Lecture has been fixed"}
         else:

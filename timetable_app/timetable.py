@@ -6,8 +6,11 @@ class Timetable(object):
     """
     Generates the timetable for lecturers, levels and department
     """
-    def __init__(self, timetable_type):
-        self.type = timetable_type
+    def __init__(self, timetable_for=None, lecturer=None, level=None, department=None):
+        self.type = timetable_for
+        self.lecturer = lecturer
+        self.level = level
+        self.department = department
 
     def get_time_slots(self, lecture_times):
         time_slots = dict()
@@ -34,13 +37,13 @@ class Timetable(object):
 
     def generate_timetable(self):
         timetable = dict()
-        if self.type["timetable_for"] == "lecturer":
-            time_slots = TimeSlot.objects.filter(course__lecturer=self.type["lecturer"])
-        if self.type["timetable_for"] == "set":
-            time_slots = TimeSlot.objects.filter(course__level=self.type["level"],
-                                                 course__department__name=self.type["department_name"])
-        if self.type["timetable_for"] == "department":
-            time_slots = TimeSlot.objects.filter(course__department__name=self.type["department_name"])
+        if self.type == "lecturer":
+            time_slots = TimeSlot.objects.filter(course__lecturer=self.lecturer)
+        if self.type == "set":
+            time_slots = TimeSlot.objects.filter(course__level=self.level,
+                                                 course__department__name=self.department)
+        if self.type == "department":
+            time_slots = TimeSlot.objects.filter(course__department__name=self.department)
         if len(time_slots) > 0:
             timetable = self.get_time_slots(time_slots)
         return timetable

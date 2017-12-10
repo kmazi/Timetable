@@ -99,7 +99,10 @@ class TimeSlot(models.Model):
     day = models.ForeignKey(Day, on_delete=models.CASCADE, null=True)
 
     def __str__(self):
-        return "{0} at {1} by {2}".format(self.course.title, self.classroom.name, self.start_time)
+        return "{0} at {1} on {2} by {3}".format(self.course.title,
+                                                self.classroom.name,
+                                                self.day.name,
+                                                self.start_time)
 
 
 class FreeTime(models.Model):
