@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block title %}Login{% endblock %}
+{% block body %}
+<style>
+    #sign-in {
+      width: 400px;
+      margin: auto;
+      margin-top: 200px;
+      background-color: #cccccc;
+      padding: 2px;
+      padding-left: 12px;
+      padding-right: 12px;
+      padding-bottom: 12px;
+    }
+  </style>
+<div id="sign-in">
+    <form method="POST">
+        {% csrf_token %}
+        <p>
+            <label>Username</label><br/>
+            <input style="width: 100%;" type="text" name="username">
+        </p>
+        <p>
+            <label>Password</label><br/>
+            <input style="width: 100%;" type="password" name="password">
+        </p>
+        <button class="btn btn-default" type="submit">Login</button>
+    </form>
+</div>
+{% endblock %}

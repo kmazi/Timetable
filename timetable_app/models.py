@@ -53,7 +53,7 @@ class ClassRoom(models.Model):
 
     def get_absolute_url(self):
         """
-            Returns the url to access a particular book instance.
+            Returns the url to access a particular classroom instance.
         """
         return reverse('classroom-detail', args=[str(self.id)])
 
@@ -73,6 +73,20 @@ class Course(models.Model):
 
     def __str__(self):
         return "{0}: {1}".format(self.code, self.title)
+
+    def lecture_fixed(self):
+        time_slots = TimeSlot.objects.filter(course__code=self.code)
+        if len(list(time_slots)):
+            return True
+        else:
+            return False
+    lecture_fixed.boolean = True
+
+    def get_absolute_url(self):
+        """
+            Returns the url to access a particular classroom instance.
+        """
+        return reverse('course-detail', args=[str(self.id)])
 
 
 class Day(models.Model):
