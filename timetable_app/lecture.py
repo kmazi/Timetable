@@ -4,9 +4,9 @@ from random import randint
 from datetime import timedelta, time
 
 class Lecture(object):
-    def __init__(self, course, department):
+    def __init__(self, course):
         self.course = course
-        self.department = department
+        self.department = course.department
 
     def get_common_free_time(self, lecturer_free_time, day):
         level_fixed_slots = TimeSlot.objects.filter(course__department=self.course.department,
@@ -67,7 +67,7 @@ class Lecture(object):
                 single_classroom = classroom[0]
                 double_classroom = classroom[1]
                 if free_start_time == 17 or course_unit == 1:
-                    lecture_fix["start_time"] = time(free_start_tim)
+                    lecture_fix["start_time"] = time(free_start_time)
                     lecture_fix["duration"] = timedelta(hours=1)
                     if single_classroom:
                         lecture_fix["classroom"] = single_classroom[randint(0, len(single_classroom)-1)]

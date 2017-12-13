@@ -157,7 +157,7 @@ class LectureTestCase(TestCase):
                                           classroom=self.classroom)
     
     def test_fix_lecturer_free_time(self):
-        lecture = Lecture(self.eng_drawing, self.civil_department)
+        lecture = Lecture(self.eng_drawing)
         free_time = FreeTime(available=[8,9,10,11,12,13,14,15,16,17],
                                     day=self.monday,
                                     lecturer=self.another_lecturer)
@@ -170,19 +170,19 @@ class LectureTestCase(TestCase):
         free_time = FreeTime(available=[8,9,11,12,13,14,15,16,17],
                                     day=self.tuesday,
                                     lecturer=self.lecturer)
-        lecture = Lecture(self.maths, self.systems_department)
+        lecture = Lecture(self.maths)
         actual_value = lecture.get_common_free_time(free_time.available, self.monday)
         expected_value = [8,9,11,12,13,14,15,16,17]
         self.assertEqual(actual_value, expected_value)
 
     def test_get_available_classroom(self):
-        lecture = Lecture(self.control_theory, self.systems_department)
+        lecture = Lecture(self.control_theory)
         actual_value = lecture.get_available_classroom(11, self.thursday)
         expected_value = [[], [self.sys_classroom]]
         self.assertEqual(actual_value, expected_value)
 
     def test_fix_lecture(self):
-        lecture = Lecture(self.control_theory, self.systems_department)
+        lecture = Lecture(self.control_theory)
         lecture.fix_lecture()
         time_slot = list(TimeSlot.objects.filter(course=self.control_theory))
         self.assertTrue(time_slot)
