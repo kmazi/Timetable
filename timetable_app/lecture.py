@@ -40,6 +40,17 @@ class Lecture(object):
         free_time.available = [val for val in free_time.available if val not in affected_start_times]
         free_time.save()
 
+    def save_lecture_in_database(self,lecture_fix_day, lecture_time, lecture_duration, lecture_fix_classroom, free_time):
+        start_time = lecture_time
+        duration = lecture_duration
+        TimeSlot.objects.create(day=lecture_fix_day,
+                                duration=duration,
+                                start_time=start_time,
+                                course=self.course,
+                                classroom=lecture_fix_classroom)
+        
+        self.fix_free_time(start_time, duration, free_time)
+
     def fix_lecture(self):
         lecture_fixes = list()
         lecture_fix = dict()
@@ -79,6 +90,7 @@ class Lecture(object):
                     
                     course_unit -= 1
                     lecture_fixes.append(lecture_fix)
+                    self.save_lecture_in_database(lecture_fix["day"], lecture_fix["start_time"], lecture_fix["duration"], lecture_fix["classroom"], free_time)
                     lecture_fixed = True
                 else:
                     lecture_fix["start_time"] = time(free_start_time)
@@ -87,30 +99,34 @@ class Lecture(object):
                         lecture_fix["duration"] = timedelta(hours=2)
                         course_unit -= 2
                         lecture_fixes.append(lecture_fix)
+                        self.save_lecture_in_database(lecture_fix["day"], lecture_fix["start_time"], lecture_fix["duration"], lecture_fix["classroom"], free_time)
                         lecture_fixed = True
                     elif single_classroom:
                         lecture_fix["classroom"] = single_classroom[randint(0, len(single_classroom)-1)]
                         lecture_fix["duration"] = timedelta(hours=1)
                         course_unit -= 1
                         lecture_fixes.append(lecture_fix)
+                        self.save_lecture_in_database(lecture_fix["day"], lecture_fix["start_time"], lecture_fix["duration"], lecture_fix["classroom"], free_time)
                         lecture_fixed = True
                     else:
                         common_available_time.remove(free_start_time)
                         continue
             days.remove(lecture_fix["day"])
         if lecture_fix in lecture_fixes:
-            for lecture_fix in lecture_fixes:
-                start_time = lecture_fix["start_time"]
-                duration = lecture_fix["duration"]
-                TimeSlot.objects.create(day=lecture_fix["day"],
-                                        duration=duration,
-                                        start_time=start_time,
-                                        course=self.course,
-                                        classroom=lecture_fix["classroom"])
+            # for lecture_fix in lecture_fixes:
+            #     self.save_lecture_in_database(lecture_fix["start_time"], lecture_fix["duration"], free_time)
+            #     start_time = lecture_fix["start_time"]
+            #     duration = lecture_fix["duration"]
+            #     TimeSlot.objects.create(day=lecture_fix["day"],
+            #                             duration=duration,
+            #                             start_time=start_time,
+            #                             course=self.course,
+            #                             classroom=lecture_fix["classroom"])
                 
-                self.fix_free_time(start_time, duration, free_time)
+            #     self.fix_free_time(start_time, duration, free_time)
             return {"status": "success",
                     "message": "Lecture has been fixed"}
         else:
             return {"status": "fail",
-                    "message": "Could not fix lecture for some reasons"}
+                    "message": "Could not fix lecture for some reasons; maybe there\
+                    are no classrooms or free time available"}
