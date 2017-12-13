@@ -81,13 +81,11 @@ class CourseAdmin(admin.ModelAdmin):
     
   def remove_all_selected_lectures(self, request, course_id, *args, **kwargs):
     selected_course = self.get_object(request, course_id)
-    self.remove_lecture(selected_course)
+    response = self.remove_lecture(selected_course)
     url = reverse(
-        'admin:timetable_app_course_change',
-        args=[selected_course.pk],
-        current_app=self.admin_site.name,
+        'admin:timetable_app_course_changelist',
     )
-    self.message_user(request, 'Success')
+    self.message_user(request, "{0} has been removed from the timetable".format(selected_course))
     return HttpResponseRedirect(url)
 
   def fix_lecture(self, request, course_id, *args, **kwargs):
@@ -96,14 +94,12 @@ class CourseAdmin(admin.ModelAdmin):
     lecture = Lecture(selected_course)
     response = lecture.fix_lecture()
     url = reverse(
-        'admin:timetable_app_course_change',
-        args=[selected_course.pk],
-        current_app=self.admin_site.name,
+        'admin:timetable_app_course_changelist',
     )
     if response["status"] == "success":
-      self.message_user(request, 'Success')
+      self.message_user(request, response["message"])
     else:
-      self.message_user(request, 'Error')
+      self.message_user(request, response["message"])
     return HttpResponseRedirect(url)
 
   
