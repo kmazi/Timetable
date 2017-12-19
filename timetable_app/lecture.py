@@ -113,17 +113,6 @@ class Lecture(object):
                         continue
             days.remove(lecture_fix["day"])
         if lecture_fix in lecture_fixes:
-            # for lecture_fix in lecture_fixes:
-            #     self.save_lecture_in_database(lecture_fix["start_time"], lecture_fix["duration"], free_time)
-            #     start_time = lecture_fix["start_time"]
-            #     duration = lecture_fix["duration"]
-            #     TimeSlot.objects.create(day=lecture_fix["day"],
-            #                             duration=duration,
-            #                             start_time=start_time,
-            #                             course=self.course,
-            #                             classroom=lecture_fix["classroom"])
-                
-            #     self.fix_free_time(start_time, duration, free_time)
             return {"status": "success",
                     "message": "Lecture has been fixed"}
         else:

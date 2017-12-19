@@ -2,47 +2,9 @@
 {% extends "base.html" %}
 
 {% block body %}
-{% load staticfiles %}
-    <link rel="stylesheet" href="{% static 'timetable_app/css/stylesheet.css' %}">
-    <style>
-        #welcome {
-            border: 2px solid #79aec8;
-            padding: 12px;
-            width: 400px;
-            margin: auto;
-            margin-top: 240px;
-            z-index: 2;
-        }
-        #welcome a {
-        display: inline-block;
-        height: 30px;
-        background-color: #79aec8;
-        color: #fff;
-        padding: 1px 5px;
-        }
-        #overlay {
-            position: absolute; /* Sit on top of the page content */
-            top: 0; 
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background-color: rgba(0,0,0,0.4); /* Black background with opacity */
-            z-index: 1; /* Specify a stack order in case you're using a different order for other elements */
-            cursor: pointer; /* Add a pointer on hover */
-        }
-    </style>
     <div id="homepage" class="home-container">
         <div id="overlay">
-            <div id="welcome" style="z-index: 5">
-                    <p style="color: #fff">
-                        Welcome to the Timetable Generator platform. This platform was built to help generate
-                        lecture fixtures for institutions.
-                    </p>
-                    <a class="btn btn-default" href="/login">Sign in</a>
-                    <a class="btn btn-default" href="/register">Sign up</a>
-                </div>
-        </div>
-        
-        
+            
+        </div> 
     </div>
 {% endblock %}
