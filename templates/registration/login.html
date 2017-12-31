@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% block title %}Login{% endblock %}
+{% block body %}
+{% load staticfiles %}
+    <div id="sign-in">
+        <h3>Sign Up</h3>
+        <form method="POST">
+            {% csrf_token %}
+            <p>
+                <label>Username</label><br/>
+                <input style="width: 100%;" type="text" name="username">
+            </p>
+            <p>
+                <label>Password</label><br/>
+                <input style="width: 100%;" type="password" name="password">
+            </p>
+            <button class="btn btn-default" type="submit">Login</button>
+        </form>
+    </div>
+{% endblock %}
