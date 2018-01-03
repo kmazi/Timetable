@@ -2,11 +2,61 @@
 
 {% block body %}
 {% load staticfiles %}
-<div>
-  <table>
-    <caption>
-      
-    </caption>
+<div id="timetable-view" style="padding-left: 2px; padding-right: 2px;">
+  <style>
+    table thead th{
+      width: 8%;
+    }
+    tbody td {
+      font-size: 10px;
+    }
+  </style>
+  <table border="1px" width="100%">
+    <caption aligh="top">Timetable for courses</caption>
+    <thead align="left">
+      <th>Day</th>
+      <th>8am</th>
+      <th>9am</th>
+      <th>10am</th>
+      <th>11am</th>
+      <th>12pm</th>
+      <th>1pm</th>
+      <th>2pm</th>
+      <th>3pm</th>
+      <th>4pm</th>
+      <th>5pm</th>
+    </thead>
+    <tbody>
+      {% for k,v in timetable.items %}
+        <tr>
+          <td style="font-size: 15px; font-weight: bold; font-style: oblique;">{{ k }}</td>
+          {% for timeslot in v %}
+              {% if timeslot.course.code %}
+                {% if timeslot.duration.seconds == 7200 %}
+                  <td colspan="2">
+                {% else %}
+                  <td>
+                {% endif %}
+                  <table width="100%" style="background-color: #e4e4e4;" border="1px">
+                      <tr>
+                          <td>course</td>
+                        <td>{{ timeslot.course.code }}</td></tr>
+                      <tr>
+                          <td>class</td>
+                        <td>{{ timeslot.classroom.name }}</td></tr>
+                      <tr>
+                        <td>duration</td>
+                        <td>{{ timeslot.duration }}</td>
+                      </tr>
+                  </table>
+                </td>
+              {% else %}
+                <td></td>
+              {% endif %}
+          {% endfor %}
+        </tr>
+      {% endfor %}
+    </tbody>
   </table>
 </div>
 {% endblock %}

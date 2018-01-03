@@ -51,7 +51,7 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = 'Timetable.urls'
-LOGIN_REDIRECT_URL = '/'
+LOGIN_REDIRECT_URL = '/timetable'
 
 TEMPLATES = [
     {

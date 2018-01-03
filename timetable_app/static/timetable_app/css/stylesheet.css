@@ -1,25 +1,65 @@
 .home-container {
     overflow: auto;
     position: relative;
+    min-height: inherit;
     background: url("../img/time-fix.jpg") no-repeat;
     background-size: cover;
 }
-
 .wrapper {
     text-align: center;
 }
-
 .button {
     position: absolute;
     background-color: silver;
     padding: 10px;
     top: 50%;
 }
-
-#site-header {
-    background-color: purple
+#site-footer, #site-header {
+    height: 40px;
+    background-color: #252325;
+  }
+#site-header > p{
+    color: #f5dd5d;
+    float: left;
 }
-
 .button:hover {
     background-color: gray;
 }
+#welcome {
+    border: 2px solid #79aec8;
+    padding: 12px;
+    width: 400px;
+    margin: auto;
+    margin-top: 240px;
+    z-index: 2;
+}
+#welcome a {
+    display: inline-block;
+    height: 30px;
+    background-color: #79aec8;
+    color: #fff;
+    padding: 1px 5px;
+}
+#overlay {
+    position: absolute; /* Sit on top of the page content */
+    top: 0; 
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0,0,0,0.4); /* Black background with opacity */
+    z-index: 1; /* Specify a stack order in case you're using a different order for other elements */
+    cursor: pointer; /* Add a pointer on hover */
+}
+#base-container {
+    overflow: auto;
+}
+#sign-in {
+    width: 400px;
+    margin: auto;
+    margin-top: 180px;
+    background-color: #cccccc;
+    padding: 2px;
+    padding-left: 12px;
+    padding-right: 12px;
+    padding-bottom: 12px;
+  }

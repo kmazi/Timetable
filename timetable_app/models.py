@@ -49,7 +49,7 @@ class ClassRoom(models.Model):
                             choices=CLASS_TYPES)
 
     def __str__(self):
-        return "{0} in {1}".format(self.name, self.department)
+        return "{0} in {1}".format(self.name, self.department.name)
 
     def get_absolute_url(self):
         """
