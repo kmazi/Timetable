@@ -23,7 +23,6 @@ class Timetable(object):
         wed_lectures.extend(lecture_times.filter(day__name="wednesday"))
         thu_lectures.extend(lecture_times.filter(day__name="thursday"))
         fri_lectures.extend(lecture_times.filter(day__name="friday"))
-        # lectures = [mon_lectures, tue_lectures, wed_lectures, thu_lectures, fri_lectures]
         time_slots["monday"] = mon_lectures
         time_slots["tuesday"] = tue_lectures
         time_slots["wednesday"] = wed_lectures
