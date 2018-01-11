@@ -18,32 +18,29 @@ class Timetable(object):
         mon_lectures, tue_lectures = list(), list()
         wed_lectures, thu_lectures = list(), list()
         fri_lectures = list()
-        for lecture_time in lecture_times:
-            if lecture_time.day.name == "monday":
-                mon_lectures.append(lecture_time)
-                time_slots["monday"] = mon_lectures
-            if lecture_time.day.name == "tuesday":
-                tue_lectures.append(lecture_time)
-                time_slots["tuesday"] = tue_lectures
-            if lecture_time.day.name == "wednesday":
-                wed_lectures.append(lecture_time)
-                time_slots["wednesday"] = wed_lectures
-            if lecture_time.day.name == "thursday":
-                thu_lectures.append(lecture_time)
-                time_slots["thursday"] = thu_lectures
-            if lecture_time.day.name == "friday":
-                fri_lectures.append(lecture_time)
-                time_slots["friday"] = fri_lectures
+        mon_lectures.extend(lecture_times.filter(day__name="monday"))
+        tue_lectures.extend(lecture_times.filter(day__name="tuesday"))
+        wed_lectures.extend(lecture_times.filter(day__name="wednesday"))
+        thu_lectures.extend(lecture_times.filter(day__name="thursday"))
+        fri_lectures.extend(lecture_times.filter(day__name="friday"))
+        # lectures = [mon_lectures, tue_lectures, wed_lectures, thu_lectures, fri_lectures]
+        time_slots["monday"] = mon_lectures
+        time_slots["tuesday"] = tue_lectures
+        time_slots["wednesday"] = wed_lectures
+        time_slots["thursday"] = thu_lectures
+        time_slots["friday"] = fri_lectures
         for day, time_slot in time_slots.items():
             i = 0
             lectures = list()
             next_count = 8
+            length = len(time_slot)
             for count in range(8, 18):
-                length = len(time_slot)
                 if length > i and time_slot[i].start_time.hour == count:
                     lectures.append(time_slot[i])
                     if time_slot[i].duration == timedelta(hours=2):
                         next_count += 2
+                    else:
+                        next_count += 1
                     i+=1
                 else:
                     if next_count == count:

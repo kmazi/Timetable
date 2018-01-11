@@ -13,7 +13,7 @@
   </style>
   <table border="1px" width="100%">
     <caption aligh="top">Timetable for courses</caption>
-    <thead align="left">
+    <thead align="left" style="background: gray; color: whitesmoke;">
       <th>Day</th>
       <th>8am</th>
       <th>9am</th>
@@ -46,7 +46,7 @@
                         <td>{{ timeslot.classroom.name }}</td></tr>
                       <tr>
                         <td>duration</td>
-                        <td>{{ timeslot.duration }}</td>
+                        <td>{{ timeslot.length }}</td>
                       </tr>
                   </table>
                 </td>

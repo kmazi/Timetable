@@ -51,6 +51,19 @@ class Lecture(object):
         
         self.fix_free_time(start_time, duration, free_time)
 
+    @staticmethod
+    def remove_lecture(slot):
+        if slot:
+            day = slot.day
+            duration = slot.duration
+            time = slot.start_time.hour
+            # this assumes that the max duration of a course is 2hrs
+            start_time = [time] if duration.seconds//3600 == 1 else [time, time+1]
+            free_time = FreeTime.objects.filter(lecturer=slot.course.lecturer, day=day).first()
+            free_time.available.extend(start_time)
+            free_time.save()
+            slot.delete()
+
     def fix_lecture(self):
         lecture_fixes = list()
         lecture_fix = dict()

@@ -6,5 +6,5 @@ urlpatterns = [
     url(r'^$', views.HomePage.as_view()),
     url(r'^timetable/$', views.ShowTable.as_view()),
     url(r'^login/$', auth_views.login),
-    url(r'^logout/$', auth_views.logout),
+    url(r'^logout/$', auth_views.logout, {'next_page':'/'}, name='logout'),
 ]
