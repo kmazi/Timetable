@@ -2,6 +2,8 @@
 
 {% block body %}
 {% load staticfiles %}
+<div><a href="/timetable/4/2">view timetable</a>
+  </div>
 <div id="timetable-view" style="padding-left: 2px; padding-right: 2px;">
   <style>
     table thead th{
@@ -12,8 +14,8 @@
     }
   </style>
   <table border="1px" width="100%">
-    <caption aligh="top">Timetable for courses</caption>
-    <thead align="left" style="background: gray; color: whitesmoke;">
+    <caption aligh="top">Timetable for lecturer: {{ user.username }}</caption>
+    <thead align="left">
       <th>Day</th>
       <th>8am</th>
       <th>9am</th>
@@ -29,7 +31,9 @@
     <tbody>
       {% for k,v in timetable.items %}
         <tr>
-          <td style="font-size: 15px; font-weight: bold; font-style: oblique;">{{ k }}</td>
+          <td style="font-size: 15px; font-weight: bold; font-style: oblique;
+          background: gray; color: whitesmoke;
+          border: solid white 1px;">{{ k }}</td>
           {% for timeslot in v %}
               {% if timeslot.course.code %}
                 {% if timeslot.duration.seconds == 7200 %}

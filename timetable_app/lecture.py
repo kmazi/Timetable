@@ -1,4 +1,3 @@
-
 from .models import TimeSlot, FreeTime, ClassRoom, Day
 from random import randint
 from datetime import timedelta, time

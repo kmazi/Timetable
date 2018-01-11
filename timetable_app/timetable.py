@@ -23,7 +23,6 @@ class Timetable(object):
         wed_lectures.extend(lecture_times.filter(day__name="wednesday"))
         thu_lectures.extend(lecture_times.filter(day__name="thursday"))
         fri_lectures.extend(lecture_times.filter(day__name="friday"))
-        # lectures = [mon_lectures, tue_lectures, wed_lectures, thu_lectures, fri_lectures]
         time_slots["monday"] = mon_lectures
         time_slots["tuesday"] = tue_lectures
         time_slots["wednesday"] = wed_lectures
@@ -50,7 +49,6 @@ class Timetable(object):
         return new_slots
 
     def generate_timetable(self):
-        timetable = dict()
         if self.type == "lecturer":
             time_slots = TimeSlot.objects.filter(course__lecturer=self.lecturer)\
                                               .order_by('day', 'start_time')
@@ -63,4 +61,6 @@ class Timetable(object):
                                                 .order_by('day', 'start_time')
         if len(time_slots) > 0:
             timetable = self.get_time_slots(time_slots)
+        else:
+            timetable = dict()
         return timetable
