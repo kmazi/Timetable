@@ -10,15 +10,60 @@ from .models import Department, ClassRoom, Course, Day, TimeSlot, FreeTime
 admin.site.register(Department)
 admin.site.register(ClassRoom)
 admin.site.register(Day)
+admin.site.disable_action('delete_selected')
+
 @admin.register(TimeSlot)
 class TimeSlotAdmin(admin.ModelAdmin):
   list_display = (
     'course',
+    'unit',
+    'lecturer',
     'start_time',
-    'duration',
+    'length',
     'day',
     'classroom',
+    'delete_lecture'
     )
+  actions = ['delete_selected_lectures']
+
+  def get_urls(self):
+    urls = super().get_urls()
+    custom_urls = [
+        url(
+            r'^(?P<slot_id>.+)/delete/$',
+            self.admin_site.admin_view(self.remove_selected_lecture),
+            name='remove_selected_lecture',
+        ),
+    ]
+    return custom_urls + urls
+
+  def delete_lecture(self, obj):
+    return format_html(
+        '<a style="display: inline-block; height: 15px; background: #79aec8;\
+        padding: 7px; border-radius: 3px;\
+        margin-left: 10px; color: white" href="{}">Remove</a>',
+        reverse('admin:remove_selected_lecture', args=[obj.pk]),
+    )
+  delete_lecture.short_description = 'Remove lecture'
+  delete_lecture.allow_tags = True
+
+  def remove_selected_lecture(self, request, slot_id, *args, **kwargs):
+    lecture = self.get_object(request, slot_id)
+    Lecture.remove_lecture(lecture)
+    url = reverse(
+        'admin:timetable_app_course_changelist',
+    )
+    self.message_user(request, "{0} has been removed from the timetable".format(lecture))
+    return HttpResponseRedirect(url)
+
+  def delete_selected_lectures(self, request, queryset):
+    """
+    Deletes all selected lectures from the timeslot
+    """
+    if len(queryset) > 0:
+      for lecture in queryset:
+        Lecture.remove_lecture(lecture)
+        
 
 @admin.register(Course)
 class CourseAdmin(admin.ModelAdmin):
@@ -28,9 +73,26 @@ class CourseAdmin(admin.ModelAdmin):
         'department',
         'level',
         'lecture_fixed',
-        'create_lecture',
-        'delete_lecture',
+        'create_lecture'
     )
+  actions = ['fix_selected_lectures', 'delete_selected_courses']
+
+  def delete_selected_courses(self, request, queryset):
+    if len(queryset) > 0:
+      for course in queryset:
+        self.remove_lecture(course)
+      queryset.delete()
+
+  def fix_selected_lectures(self, request, queryset):
+    if len(queryset) > 0:
+      for course in queryset:
+        time_slots = TimeSlot.objects.filter(course=course)
+        if time_slots:
+          for slot in time_slots:
+            Lecture.remove_lecture(slot)
+      for course in queryset:
+        lecture = Lecture(course)
+        lecture.fix_lecture()
 
   def get_urls(self):
     urls = super().get_urls()
@@ -40,57 +102,24 @@ class CourseAdmin(admin.ModelAdmin):
             self.admin_site.admin_view(self.fix_lecture),
             name='fix-lecture',
         ),
-        url(
-            r'^(?P<course_id>.+)/delete/$',
-            self.admin_site.admin_view(self.remove_all_selected_lectures),
-            name='remove_all_selected_lectures',
-        ),
     ]
     return custom_urls + urls
-
-  def delete_lecture(self, obj):
-    return format_html(
-        '<a style="display: inline-block; height: 15px; background: #79aec8;\
-        padding: 10px; padding-buttom: 10px; margin-left: 10px; color: white" href="{}">Delete</a>',
-        reverse('admin:remove_all_selected_lectures', args=[obj.pk]),
-    )
-  delete_lecture.short_description = 'Delete lecture'
-  delete_lecture.allow_tags = True
   
   def create_lecture(self, obj):
     return format_html(
-        '<a style="display: inline-block; height: 15px; background: #79aec8;\
-        padding: 10px; padding-buttom: 10px; margin-left: 10px; color: white" href="{}">Create</a>',
+        '<a style="display: inline-block; height: 15px; border-radius: 3px; background: #79aec8;\
+        padding: 10px; margin-left: 7px; color: white" href="{}">Create</a>',
         reverse('admin:fix-lecture', args=[obj.pk]),
     )
   create_lecture.short_description = 'Create lecture'
   create_lecture.allow_tags = True
 
-  def remove_lecture(self, selected_course):
-    time_slots = TimeSlot.objects.filter(course__code=selected_course.code, course__title=selected_course.title)
-    if time_slots:
-      for slot in time_slots:
-        day = slot.day
-        duration = slot.duration
-        time = slot.start_time.hour
-        start_time = [time] if duration.seconds//3600 == 1 else [time, time+1]
-        free_time = FreeTime.objects.filter(lecturer=selected_course.lecturer, day=day).first()
-        free_time.available.extend(start_time)
-        free_time.save()
-      time_slots.delete()
-    
-  def remove_all_selected_lectures(self, request, course_id, *args, **kwargs):
-    selected_course = self.get_object(request, course_id)
-    response = self.remove_lecture(selected_course)
-    url = reverse(
-        'admin:timetable_app_course_changelist',
-    )
-    self.message_user(request, "{0} has been removed from the timetable".format(selected_course))
-    return HttpResponseRedirect(url)
-
   def fix_lecture(self, request, course_id, *args, **kwargs):
     selected_course = self.get_object(request, course_id)
-    self.remove_lecture(selected_course)
+    time_slots = TimeSlot.objects.filter(course=selected_course)
+    if time_slots:
+      for slot in time_slots:
+        Lecture.remove_lecture(slot)
     lecture = Lecture(selected_course)
     response = lecture.fix_lecture()
     url = reverse(

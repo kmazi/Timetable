@@ -5,6 +5,18 @@
     background: url("../img/time-fix.jpg") no-repeat;
     background-size: cover;
 }
+#homepage > div{
+    max-width: 50%;
+    padding: 30px 20px;
+    margin: auto;
+    margin-top: 200px;
+    color: whitesmoke;
+    background: rgba(128, 128, 128, 1);
+    border-radius: 5px;
+}
+#homepage h2{
+    text-align: center;
+}
 .wrapper {
     text-align: center;
 }
@@ -33,7 +45,7 @@
     margin-top: 240px;
     z-index: 2;
 }
-#welcome a {
+#welcome a, #homepage > div a {
     display: inline-block;
     height: 30px;
     background-color: #79aec8;
@@ -52,14 +64,28 @@
 }
 #base-container {
     overflow: auto;
+    background: #cccccc url("../img/time-pic.jpg") no-repeat;
+    background-size: cover;
 }
 #sign-in {
-    width: 400px;
+    max-width: 400px;
     margin: auto;
-    margin-top: 180px;
-    background-color: #cccccc;
-    padding: 2px;
-    padding-left: 12px;
-    padding-right: 12px;
-    padding-bottom: 12px;
+    margin-top: 170px;
+    background: rgb(204, 204, 204);
+    background: rgba(128, 128, 128, 1);
+    padding: 20px;
+    border-radius: 10px;
   }
+#sign-in input[name=username], #sign-in input[name=password]{
+    width: 100%;
+}
+#sign-in label, #sign-in h3 {
+    color: whitesmoke;
+}
+#sign-in h3 {
+    border-bottom: solid 1px whitesmoke;
+}
+#sign-in ul {
+    color: rgb(155, 37, 37);
+}
+

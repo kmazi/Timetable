@@ -112,6 +112,19 @@ class TimeSlot(models.Model):
     duration = models.DurationField(default=default_duration, )
     day = models.ForeignKey(Day, on_delete=models.CASCADE, null=True)
 
+    def length(self):
+        time_length = self.duration.seconds//3600
+        format_string = "{0}hr".format(time_length) if time_length <= 1 else "{0}hrs".format(time_length)
+        return format_string
+
+    def unit(self):
+        unit = self.course.unit
+        format_string = "{0}unit".format(unit) if unit <= 1 else "{0}units".format(unit)
+        return format_string
+
+    def lecturer(self):
+        return self.course.lecturer
+
     def __str__(self):
         return "{0} at {1} on {2} by {3}".format(self.course.title,
                                                 self.classroom.name,

@@ -15,7 +15,9 @@
     <div>
         <div id="site-header" >
           <p><a style="color: #f5dd5d; float: right; padding-right: 10px;" href="/">Timetable Generator</a></p>
+          {% if user.is_authenticated %}
           <a style="color: #f5dd5d; float: right; padding-right: 10px;" href="/logout">Logout</a>
+          {% endif %}
         </div>
         <div id="base-container">
             {% block body %}
