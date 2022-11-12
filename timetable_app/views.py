@@ -3,8 +3,10 @@ from django.shortcuts import render
 from .models import TimeSlot, Department
 from .timetable import Timetable
 
+
 class HomePage(TemplateView):
     template_name = "homepage.html"
+
 
 class ShowTable(TemplateView):
     template_name = "timetable.html"
@@ -15,6 +17,7 @@ class ShowTable(TemplateView):
         context = super(ShowTable, self).get_context_data(**kwargs)
         context['timetable'] = timetable
         return context
+
 
 class LevelTimetable(TemplateView):
     template_name = "timetable.html"

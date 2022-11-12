@@ -1,7 +1,9 @@
 from django.contrib import admin
-from django.core.urlresolvers import reverse
+# from django.core.urlresolvers import reverse
+from django.urls import reverse
 from django.http import HttpResponseRedirect
-from django.conf.urls import url
+# from django.conf.urls import url
+from django.urls import re_path as url
 from django.utils.html import format_html
 from .lecture import Lecture
 from .models import Department, ClassRoom, Course, Day, TimeSlot, FreeTime
