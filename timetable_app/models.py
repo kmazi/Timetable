@@ -5,6 +5,7 @@ from django.contrib.postgres.fields import ArrayField
 from datetime import timedelta
 
 
+
 class Department(models.Model):
     class Meta:
         db_table = "Department"
